@@ -1,8 +1,9 @@
 package api
 
 import (
+	db "simplebank/sqlc"
+
 	"github.com/gin-gonic/gin"
-	db "github.com/rsingla/simplebank/sqlc/"
 )
 
 type Server struct {
@@ -18,4 +19,12 @@ func NewServer(store *db.Store) *Server {
 	router.DELETE("/accounts/:id", server.deleteAccount)
 	server.router = router
 	return server
+}
+
+func (server *Server) Run(address string) error {
+	return server.router.Run(address)
+}
+
+func errorResponse(err error) gin.H {
+	return gin.H{"error": err.Error()}
 }

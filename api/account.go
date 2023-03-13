@@ -1,11 +1,12 @@
 package api
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 
-	db "github.com/rsingla/simplebank/sqlc/"
+	db "simplebank/sqlc"
 )
 
 type createAccount struct {
@@ -13,14 +14,10 @@ type createAccount struct {
 	Currency string `json:"currency" binding:"required,oneof=USD EUR INR"`
 }
 
-func errorResponse(err error) gin.H {
-	return gin.H{"error": err.Error()}
-}
-
 func (server *Server) createAccount(ctx *gin.Context) {
 	var req createAccount
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(400, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
 
@@ -30,11 +27,11 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
-		ctx.JSON(500, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(200, account)
+	ctx.JSON(http.StatusOK, account)
 }
 
 func (server *Server) getAccount(ctx *gin.Context) {
@@ -44,8 +41,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.GetAccountParams{ID: id}
-	account, err := server.store.GetAccount(ctx, arg)
+	account, err := server.store.GetAccountByAccountId(ctx, id)
 	if err != nil {
 		ctx.JSON(500, errorResponse(err))
 		return
@@ -61,8 +57,7 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.DeleteAccountParams{ID: id}
-	account, err := server.store.DeleteAccount(ctx, arg)
+	account, err := server.store.DeleteAccount(ctx, id)
 	if err != nil {
 		ctx.JSON(500, errorResponse(err))
 		return

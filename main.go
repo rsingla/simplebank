@@ -1,21 +1,31 @@
 package main
 
 import (
-	"net/http"
+	"database/sql"
+	"log"
+	"simplebank/api"
 
-	"github.com/gin-gonic/gin"
+	db "simplebank/sqlc"
+
+	_ "github.com/lib/pq"
+)
+
+const (
+	dbDriver      = "postgres"
+	dbSource      = "postgresql://root:simplebankpass@localhost:5432/postgres?sslmode=disable"
+	serverAddress = ":8080"
 )
 
 func main() {
-	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello, World, Yohaan is fuddu!")
-	})
+	conn, err := sql.Open(dbDriver, dbSource)
 
-	r.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello, World, Rajeev is awesome!")
-	})
+	if err != nil {
+		log.Fatal("cannot connect to db: ", err)
+	}
 
-	r.Run()
+	store := db.NewStore(conn)
+	server := api.NewServer(store)
+
+	err = server.Run(serverAddress)
 }
