@@ -12,6 +12,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y golang
       - name: Build application
         run: go build -o app
+          echo ${{ secrets.HOST }}
+          echo ${{ secrets.USERNAME }}
+          echo ${{ secrets.PRIVATE_KEY }}
       - name: Deploy to Lightsail
         uses: appleboy/scp-action@master
         with:
