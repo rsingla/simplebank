@@ -2,6 +2,7 @@ package sqlc
 
 import (
 	"context"
+	"fmt"
 	"simplebank/util"
 	"testing"
 
@@ -81,7 +82,14 @@ func TestGetAccountByAccountId(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 
-	Account, err := testQueries.ListAccounts(context.Background())
+	arg := ListAccountsParams{
+		Limit:  1,
+		Offset: 2,
+	}
+
+	Account, err := testQueries.ListAccounts(context.Background(), arg)
+	fmt.Println(Account)
+	fmt.Println(err)
 	require.NoError(t, err)
 	require.NotEmpty(t, Account)
 

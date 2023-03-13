@@ -117,11 +117,49 @@ func (q *Queries) GetAccountForUpdate(ctx context.Context, accountID int64) (Ban
 }
 
 const listAccounts = `-- name: ListAccounts :many
+SELECT account_id, owner, balance, currency, created_at FROM "bank"."accounts" ORDER BY account_id LIMIT $1 OFFSET $2
+`
+
+type ListAccountsParams struct {
+	Limit  int64
+	Offset int64
+}
+
+func (q *Queries) ListAccounts(ctx context.Context, arg ListAccountsParams) ([]BankAccount, error) {
+	rows, err := q.db.QueryContext(ctx, listAccounts, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []BankAccount
+	for rows.Next() {
+		var i BankAccount
+		if err := rows.Scan(
+			&i.AccountID,
+			&i.Owner,
+			&i.Balance,
+			&i.Currency,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listAllAccounts = `-- name: ListAllAccounts :many
 SELECT account_id, owner, balance, currency, created_at FROM "bank"."accounts"
 `
 
-func (q *Queries) ListAccounts(ctx context.Context) ([]BankAccount, error) {
-	rows, err := q.db.QueryContext(ctx, listAccounts)
+func (q *Queries) ListAllAccounts(ctx context.Context) ([]BankAccount, error) {
+	rows, err := q.db.QueryContext(ctx, listAllAccounts)
 	if err != nil {
 		return nil, err
 	}

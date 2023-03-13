@@ -17,8 +17,11 @@ select *  from "bank"."accounts" where account_id = $1;
 -- name: GetAccountForUpdate :one
 select *  from "bank"."accounts" where account_id = $1 FOR NO KEY UPDATE;
 
--- name: ListAccounts :many
+-- name: ListAllAccounts :many
 SELECT * FROM "bank"."accounts";
+
+-- name: ListAccounts :many
+SELECT * FROM "bank"."accounts" ORDER BY account_id LIMIT $1 OFFSET $2;
 
 -- name: CreateAccount :one
 INSERT INTO "bank"."accounts" (owner, balance, currency) VALUES ($1, $2, $3) RETURNING *;
