@@ -7,6 +7,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Run script with secret
+        env:
+          MY_SECRET: ${{ secrets.USERNAME }}
+        run: |
+          # use the secret in your script
+          echo $MY_SECRET
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y golang
