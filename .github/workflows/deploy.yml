@@ -17,10 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y golang
-      - run: echo ${{ secrets.HOST }}
       - run: echo "::debug::Debug mode on"
-      - run: echo ${{ secrets.USERNAME }}
-      - run: echo ${{ secrets.PRIVATE_KEY }}
       - name: Build application
         run: go build -o app
       - name: Deploy to Lightsail
