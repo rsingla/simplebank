@@ -1,0 +1,34 @@
+name: Deploy to Lightsail
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y golang
+      - name: Build application
+        run: go build -o app
+      - name: Deploy to Lightsail
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: ./app
+          target: /home/ubuntu/myapp/
+      - name: SSH into Lightsail
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/myapp
+            sudo systemctl stop myapp
+            mv app myapp
+            sudo systemctl start myapp
