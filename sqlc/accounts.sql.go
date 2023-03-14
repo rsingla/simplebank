@@ -7,6 +7,7 @@ package sqlc
 
 import (
 	"context"
+	_ "github.com/lib/pq"
 )
 
 const createAccount = `-- name: CreateAccount :one
