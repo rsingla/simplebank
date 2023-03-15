@@ -5,6 +5,7 @@ sql:
       - ./queries/accounts.sql
       - ./queries/entries.sql
       - ./queries/transfers.sql
+      - ./queries/users.sql
   engine: "postgresql"
   gen:
     go: 

@@ -19,3 +19,7 @@ migrate -path migrations -database "postgres://user:password@localhost:5432/data
 Get driver for Postgres 
 
 go get github.com/lib/pq
+
+Use to generate SQLC 
+
+Sqlc generate 

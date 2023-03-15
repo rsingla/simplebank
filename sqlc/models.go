@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"time"
 )
 
 type BankCurrency string
@@ -73,4 +74,14 @@ type BankTransfer struct {
 	ToAccountID   int64
 	Amount        int64
 	CreatedAt     sql.NullTime
+}
+
+type BankUser struct {
+	Username          string
+	HashedPassword    string
+	FirstName         string
+	LastName          string
+	Email             string
+	PasswordChangedAt time.Time
+	CreatedAt         sql.NullTime
 }

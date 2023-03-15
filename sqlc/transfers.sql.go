@@ -8,7 +8,6 @@ package sqlc
 import (
 	"context"
 	"database/sql"
-	_ "github.com/lib/pq"
 )
 
 const createTransfer = `-- name: CreateTransfer :one
