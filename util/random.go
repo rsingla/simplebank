@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -38,4 +39,28 @@ func RandomInt(min, max int64) int64 {
 func RandomCurrency() string {
 	currencies := []string{"USD", "EUR", "GBP"}
 	return currencies[rand.Intn(len(currencies))]
+}
+
+func RandomPassword() string {
+	return RandomString(10)
+}
+
+func RandomEmail(username string) string {
+	q := []string{"gmail.com", "yahoo.com", "hotmail.com"}
+	return username + "@" + q[rand.Intn(len(q))]
+}
+
+func RandomPhoneNumber() string {
+	// Generate random 3-digit area code
+	areaCode := rand.Intn(900) + 100
+
+	// Generate random 3-digit exchange code
+	exchangeCode := rand.Intn(900) + 100
+
+	// Generate random 4-digit line number
+	lineNumber := rand.Intn(9000) + 1000
+
+	phoneNumber := fmt.Sprintf("(%d) %d-%d", areaCode, exchangeCode, lineNumber)
+
+	return phoneNumber
 }
