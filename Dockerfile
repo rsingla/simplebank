@@ -1,10 +1,15 @@
 # Use an official Golang runtime as a parent image
-FROM golang:1.19-alpine
+FROM golang:1.20-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY go.mod ./
+RUN go mod download
+
+COPY . ./
 
 RUN go build -o main .
 
-CMD ["/app/main"]
+EXPOSE 8080
+
+CMD [ "/app/main" ]

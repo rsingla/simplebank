@@ -17,6 +17,10 @@ type createUser struct {
 	Email     string `json:"email" binding:"required,email"`
 }
 
+func (server *Server) checkStatus(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+}
+
 func (server *Server) createUser(ctx *gin.Context) {
 	var req createUser
 	if err := ctx.ShouldBindJSON(&req); err != nil {
