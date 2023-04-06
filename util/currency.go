@@ -11,7 +11,7 @@ const (
 
 func IsSupportedCurrency(currency string) bool {
 	switch currency {
-	case USD, EUR, INR, GBP, CAD, AUD:
+	case USD, EUR, INR, GBP, CAD, AUD, SGD:
 		return true
 	default:
 		return false
